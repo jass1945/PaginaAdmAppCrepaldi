@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel Crepaldi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+ 
+  <div id="tela-login">
+    <h1>Painel Crepaldi</h1>
+    <input type="email" id="email" placeholder="E-mail">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="entrar()">Entrar</button>
+    <p id="aviso-login" class="erro"></p>
+  </div>
+
+ 
+  <div id="tela-painel" style="display: none;">
+
+    <div class="topo">
+      <h1>Painel Crepaldi</h1>
+      <button onclick="sair()">Sair</button>
+    </div>
+
+    <div class="menu">
+      <button onclick="mostrarAba('motoristas')">Motoristas</button>
+      <button onclick="mostrarAba('veiculos')">Veículos</button>
+      <button onclick="mostrarAba('viagens')">Viagens</button>
+      <button onclick="mostrarAba('abastecidas')">Abastecidas</button>
+    </div>
+
+    
+    <div id="aba-motoristas" class="aba">
+      <h2>Motoristas</h2>
+      <div class="formulario">
+        <input type="text" id="m-nome" placeholder="Nome">
+        <input type="text" id="m-cpf" placeholder="CPF (só números)" maxlength="11">
+        <input type="text" id="m-senha" placeholder="Senha (4 números)" maxlength="4">
+        <input type="text" id="m-unidade" placeholder="Unidade">
+        <input type="text" id="m-periodo" placeholder="Período">
+        <button onclick="adicionarMotorista()">Adicionar</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Nome</th><th>CPF</th><th>Unidade</th><th>Período</th><th>Situação</th><th></th></tr>
+        </thead>
+        <tbody id="lista-motoristas"></tbody>
+      </table>
+    </div>
+
+    
+    <div id="aba-veiculos" class="aba">
+      <h2>Veículos</h2>
+      <div class="formulario">
+        <input type="text" id="v-placa" placeholder="Placa">
+        <input type="text" id="v-modelo" placeholder="Modelo">
+        <button onclick="adicionarVeiculo()">Adicionar</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Placa</th><th>Modelo</th><th>Situação</th><th></th></tr>
+        </thead>
+        <tbody id="lista-veiculos"></tbody>
+      </table>
+    </div>
+
+    
+    <div id="aba-viagens" class="aba">
+      <h2>Viagens</h2>
+      <table>
+        <thead>
+          <tr><th>Data</th><th>Placa</th><th>Número</th><th>Valor</th><th>Produtor</th><th>Motorista</th><th>Cancelada</th><th>Foto</th></tr>
+        </thead>
+        <tbody id="lista-viagens"></tbody>
+      </table>
+    </div>
+
+    
+    <div id="aba-abastecidas" class="aba">
+      <h2>Abastecidas</h2>
+      <table>
+        <thead>
+          <tr><th>Data</th><th>Placa</th><th>Combustível</th><th>Litros</th><th>Valor</th><th>Posto</th><th>Motorista</th></tr>
+        </thead>
+        <tbody id="lista-abastecidas"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

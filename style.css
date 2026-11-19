@@ -1,0 +1,116 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f1f4f8;
+  margin: 0;
+  color: #222;
+}
+
+h1, h2 {
+  margin: 0 0 15px 0;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+button {
+  padding: 8px 14px;
+  background-color: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+#tela-login {
+  max-width: 320px;
+  margin: 80px auto;
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.erro {
+  color: red;
+  margin: 0;
+}
+
+
+.topo {
+  background-color: #14213d;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topo h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.menu {
+  padding: 15px 20px 0 20px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.aba {
+  display: none;
+  background-color: white;
+  margin: 15px 20px;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.formulario {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #eef1f6;
+}
+
+.verde {
+  color: green;
+  font-weight: bold;
+}
+
+.vermelho {
+  color: red;
+  font-weight: bold;
+}
+
+.btn-vermelho {
+  background-color: #c62828;
+}
+
+.btn-verde {
+  background-color: #2e7d32;
+}
