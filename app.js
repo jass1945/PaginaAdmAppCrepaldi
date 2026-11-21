@@ -1,10 +1,10 @@
-
 var URL_SUPABASE = 'https://dkcaievouhfeynyclvzj.supabase.co';
 var CHAVE_SUPABASE = 'sb_publishable_x4W5Z3Rr0W9SIT_i-LNMhA_b_KkR3-S';
 
 var banco = supabase.createClient(URL_SUPABASE, CHAVE_SUPABASE);
 
 var abaAtual = 'motoristas';
+var nomesMotoristas = {};   
 
 
 function limpar(texto) {
@@ -12,7 +12,33 @@ function limpar(texto) {
   return String(texto).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+// converte data dd/mm
+function formatarData(data) {
+  if (!data) return '';
+  var partes = String(data).slice(0, 10).split('-');
+  return partes[2] + '/' + partes[1] + '/' + partes[0];
+}
 
+
+function nomeDoMotorista(id) {
+  if (id === null || id === undefined) return '';
+  return nomesMotoristas[id] || 'Motorista ' + id;
+}
+
+// Busca todos os motoristas e guarda o nome de cada id
+async function carregarNomes() {
+  var resposta = await banco.from('login_usuario').select('id, nome');
+  if (resposta.error) {
+    alert('Erro: ' + resposta.error.message);
+    return;
+  }
+  nomesMotoristas = {};
+  for (var i = 0; i < resposta.data.length; i++) {
+    nomesMotoristas[resposta.data[i].id] = resposta.data[i].nome;
+  }
+}
+
+// LOGIN 
 async function entrar() {
   var email = document.getElementById('email').value.trim();
   var senha = document.getElementById('senha').value;
@@ -35,7 +61,7 @@ async function entrar() {
 
   document.getElementById('tela-login').style.display = 'none';
   document.getElementById('tela-painel').style.display = 'block';
-  mostrarAba('motoristas');
+  mostrarAba('viagens');
 }
 
 async function sair() {
@@ -44,8 +70,8 @@ async function sair() {
   document.getElementById('tela-login').style.display = 'flex';
 }
 
-
-function mostrarAba(nome) {
+// TROCA DE ABAS
+async function mostrarAba(nome) {
   abaAtual = nome;
 
   var abas = ['motoristas', 'veiculos', 'viagens', 'abastecidas'];
@@ -56,11 +82,17 @@ function mostrarAba(nome) {
 
   if (nome === 'motoristas') carregarMotoristas();
   if (nome === 'veiculos') carregarVeiculos();
-  if (nome === 'viagens') carregarViagens();
-  if (nome === 'abastecidas') carregarAbastecidas();
+  if (nome === 'viagens') {
+    await carregarNomes();
+    carregarViagens();
+  }
+  if (nome === 'abastecidas') {
+    await carregarNomes();
+    carregarAbastecidas();
+  }
 }
 
-
+// INATIVAR 
 async function mudarSituacao(tabela, id, ativoAgora) {
   var pergunta = ativoAgora ? 'Inativar este cadastro?' : 'Ativar este cadastro?';
   if (!confirm(pergunta)) return;
@@ -84,7 +116,7 @@ function botaoSituacao(tabela, id, ativo) {
   return '<button class="' + classe + '" onclick="mudarSituacao(\'' + tabela + '\', ' + id + ', ' + ativo + ')">' + texto + '</button>';
 }
 
-
+// MOTORISTAS
 async function carregarMotoristas() {
   var resposta = await banco.from('login_usuario').select('*').order('nome');
   if (resposta.error) {
@@ -149,7 +181,7 @@ async function adicionarMotorista() {
   carregarMotoristas();
 }
 
-
+// VEICULOS
 async function carregarVeiculos() {
   var resposta = await banco.from('veiculos').select('*').order('placa');
   if (resposta.error) {
@@ -195,9 +227,29 @@ async function adicionarVeiculo() {
   carregarVeiculos();
 }
 
+// FILTRO DE DATAS
+function limparFiltro(nome) {
+  document.getElementById(nome + '-de').value = '';
+  document.getElementById(nome + '-ate').value = '';
+  if (nome === 'viagens') carregarViagens();
+  if (nome === 'abastecidas') carregarAbastecidas();
+}
 
+// VIAGENS 
 async function carregarViagens() {
-  var resposta = await banco.from('nova_viagem').select('*').order('id', { ascending: false }).limit(200);
+  var de = document.getElementById('viagens-de').value;
+  var ate = document.getElementById('viagens-ate').value;
+
+  if (de !== '' && ate !== '' && de > ate) {
+    alert('A data inicial não pode ser maior que a final.');
+    return;
+  }
+
+  var consulta = banco.from('nova_viagem').select('*');
+  if (de !== '') consulta = consulta.gte('data_da_viagem', de);
+  if (ate !== '') consulta = consulta.lte('data_da_viagem', ate);
+
+  var resposta = await consulta.order('data_da_viagem', { ascending: false }).limit(200);
   if (resposta.error) {
     alert('Erro: ' + resposta.error.message);
     return;
@@ -207,19 +259,19 @@ async function carregarViagens() {
   for (var i = 0; i < resposta.data.length; i++) {
     var v = resposta.data[i];
 
-    var foto = '';
+    var foto = 'Sem foto';
     if (v.foto_caminho) {
       var link = banco.storage.from('fotos-viagens').getPublicUrl(v.foto_caminho).data.publicUrl;
-      foto = '<a href="' + link + '" target="_blank">Ver foto</a>';
+      foto = '<button onclick="window.open(\'' + link + '\', \'_blank\')">Ver foto</button>';
     }
 
     html += '<tr>';
-    html += '<td>' + limpar(v.data_da_viagem) + '</td>';
+    html += '<td>' + formatarData(v.data_da_viagem) + '</td>';
     html += '<td>' + limpar(v.placa_do_veiculo) + '</td>';
     html += '<td>' + limpar(v.numero_viagem) + '</td>';
     html += '<td>' + limpar(v.valor_da_viagem) + '</td>';
     html += '<td>' + limpar(v.nome_do_produtor) + '</td>';
-    html += '<td>' + limpar(v.motorista_id) + '</td>';
+    html += '<td>' + limpar(nomeDoMotorista(v.motorista_id)) + '</td>';
     html += '<td>' + (v.cancelada ? 'Sim' : 'Não') + '</td>';
     html += '<td>' + foto + '</td>';
     html += '</tr>';
@@ -227,9 +279,21 @@ async function carregarViagens() {
   document.getElementById('lista-viagens').innerHTML = html;
 }
 
-
+// ABASTECIDAS 
 async function carregarAbastecidas() {
-  var resposta = await banco.from('abastecida').select('*').order('id', { ascending: false }).limit(200);
+  var de = document.getElementById('abastecidas-de').value;
+  var ate = document.getElementById('abastecidas-ate').value;
+
+  if (de !== '' && ate !== '' && de > ate) {
+    alert('A data inicial não pode ser maior que a final.');
+    return;
+  }
+
+  var consulta = banco.from('abastecida').select('*');
+  if (de !== '') consulta = consulta.gte('data', de);
+  if (ate !== '') consulta = consulta.lte('data', ate);
+
+  var resposta = await consulta.order('data', { ascending: false }).limit(200);
   if (resposta.error) {
     alert('Erro: ' + resposta.error.message);
     return;
@@ -239,13 +303,13 @@ async function carregarAbastecidas() {
   for (var i = 0; i < resposta.data.length; i++) {
     var a = resposta.data[i];
     html += '<tr>';
-    html += '<td>' + limpar(a.data) + '</td>';
+    html += '<td>' + formatarData(a.data) + '</td>';
     html += '<td>' + limpar(a.placa_do_veiculo) + '</td>';
     html += '<td>' + limpar(a.combustivel) + '</td>';
     html += '<td>' + limpar(a.litros_abastecidos) + '</td>';
     html += '<td>' + limpar(a.valor_pago) + '</td>';
     html += '<td>' + limpar(a.posto) + '</td>';
-    html += '<td>' + limpar(a.motorista_id) + '</td>';
+    html += '<td>' + limpar(nomeDoMotorista(a.motorista_id)) + '</td>';
     html += '</tr>';
   }
   document.getElementById('lista-abastecidas').innerHTML = html;
