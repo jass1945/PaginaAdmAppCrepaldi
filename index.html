@@ -8,7 +8,7 @@
 </head>
 <body>
 
- 
+  <!-- TELA DE LOGIN -->
   <div id="tela-login">
     <h1>Painel Crepaldi</h1>
     <input type="email" id="email" placeholder="E-mail">
@@ -17,7 +17,7 @@
     <p id="aviso-login" class="erro"></p>
   </div>
 
- 
+  <!-- TELA DO PAINEL -->
   <div id="tela-painel" style="display: none;">
 
     <div class="topo">
@@ -26,13 +26,13 @@
     </div>
 
     <div class="menu">
+      <button onclick="mostrarAba('viagens')">Viagens</button>
+      <button onclick="mostrarAba('abastecidas')">Abastecidas</button>      
       <button onclick="mostrarAba('motoristas')">Motoristas</button>
       <button onclick="mostrarAba('veiculos')">Veículos</button>
-      <button onclick="mostrarAba('viagens')">Viagens</button>
-      <button onclick="mostrarAba('abastecidas')">Abastecidas</button>
     </div>
 
-    
+    <!-- MOTORISTAS -->
     <div id="aba-motoristas" class="aba">
       <h2>Motoristas</h2>
       <div class="formulario">
@@ -51,7 +51,7 @@
       </table>
     </div>
 
-    
+    <!-- VEICULOS -->
     <div id="aba-veiculos" class="aba">
       <h2>Veículos</h2>
       <div class="formulario">
@@ -67,9 +67,15 @@
       </table>
     </div>
 
-    
+    <!-- VIAGENS -->
     <div id="aba-viagens" class="aba">
       <h2>Viagens</h2>
+      <div class="formulario">
+        <label>De: <input type="date" id="viagens-de"></label>
+        <label>Até: <input type="date" id="viagens-ate"></label>
+        <button onclick="carregarViagens()">Filtrar</button>
+        <button onclick="limparFiltro('viagens')">Limpar</button>
+      </div>
       <table>
         <thead>
           <tr><th>Data</th><th>Placa</th><th>Número</th><th>Valor</th><th>Produtor</th><th>Motorista</th><th>Cancelada</th><th>Foto</th></tr>
@@ -78,9 +84,15 @@
       </table>
     </div>
 
-    
+    <!-- ABASTECIDAS -->
     <div id="aba-abastecidas" class="aba">
       <h2>Abastecidas</h2>
+      <div class="formulario">
+        <label>De: <input type="date" id="abastecidas-de"></label>
+        <label>Até: <input type="date" id="abastecidas-ate"></label>
+        <button onclick="carregarAbastecidas()">Filtrar</button>
+        <button onclick="limparFiltro('abastecidas')">Limpar</button>
+      </div>
       <table>
         <thead>
           <tr><th>Data</th><th>Placa</th><th>Combustível</th><th>Litros</th><th>Valor</th><th>Posto</th><th>Motorista</th></tr>
