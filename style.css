@@ -26,7 +26,7 @@ button {
   cursor: pointer;
 }
 
-
+/* Login */
 #tela-login {
   max-width: 320px;
   margin: 80px auto;
@@ -43,7 +43,7 @@ button {
   margin: 0;
 }
 
-
+/* Painel */
 .topo {
   background-color: #14213d;
   color: white;
@@ -80,7 +80,6 @@ button {
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
-
 
 table {
   width: 100%;
