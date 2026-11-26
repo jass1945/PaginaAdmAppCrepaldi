@@ -75,6 +75,7 @@
         <label>Até: <input type="date" id="viagens-ate"></label>
         <button onclick="carregarViagens()">Filtrar</button>
         <button onclick="limparFiltro('viagens')">Limpar</button>
+        <button onclick="exportarViagensExcel()">Exportar Excel</button>
       </div>
       <table>
         <thead>
@@ -92,6 +93,8 @@
         <label>Até: <input type="date" id="abastecidas-ate"></label>
         <button onclick="carregarAbastecidas()">Filtrar</button>
         <button onclick="limparFiltro('abastecidas')">Limpar</button>
+        <button onclick="exportarAbastecidasExcel()">Exportar Excel</button>
+        
       </div>
       <table>
         <thead>
@@ -104,6 +107,10 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-  <script src="app.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script src="app.js"></script>
 </body>
 </html>
+
