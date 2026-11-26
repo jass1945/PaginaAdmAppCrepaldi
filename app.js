@@ -336,6 +336,11 @@ async function carregarViagens() {
 
       foto = '<button onclick="window.open(\'' + link + '\', \'_blank\')">Ver foto</button>';
     }
+    var local = 'Sem local';
+    if (v.latitude !== null && v.longitude !== null) {
+      var mapa = 'https://www.google.com/maps?q=' + v.latitude + ',' + v.longitude;
+      local = '<a href="' + mapa + '" target="_blank"><button>Ver no mapa</button></a>';
+    }    
 
     html += '<tr>';
     html += '<td>' + formatarData(v.data_da_viagem) + '</td>';
@@ -345,9 +350,11 @@ async function carregarViagens() {
     html += '<td>' + limpar(v.nome_do_produtor) + '</td>';
     html += '<td>' + limpar(nomeDoMotorista(v.motorista_id)) + '</td>';
     html += '<td>' + (v.cancelada ? 'Sim' : 'Não') + '</td>';
-    html += '<td>' + foto + '</td>';
+    html += '<td>' + local + '</td>';
+    html += '<td>' + foto + '</td>';    
     html += '</tr>';
   }
+
 
   document.getElementById('lista-viagens').innerHTML = html;
 }
